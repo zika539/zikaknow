@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>⚠️ Peringatan Keamanan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* biar lebih meyakinkan seperti sistem */
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Roboto', 'Courier New', monospace;
+            padding: 16px;
+        }
+
+        /* Card utama */
+        .hacker-card {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(8, 12, 25, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.6), 0 0 20px rgba(0,255,255,0.2);
+            overflow: hidden;
+            transition: all 0.2s;
+            animation: glitchBorder 3s infinite;
+        }
+
+        @keyframes glitchBorder {
+            0% { border-color: rgba(0, 255, 255, 0.3); box-shadow: 0 0 8px cyan; }
+            95% { border-color: rgba(0, 255, 255, 0.5); box-shadow: 0 0 12px cyan; }
+            100% { border-color: rgba(255, 0, 100, 0.8); box-shadow: 0 0 20px #ff0066; }
+        }
+
+        /* header dengan efek matrix */
+        .header {
+            background: #000000aa;
+            padding: 20px 24px 12px;
+            text-align: center;
+            border-bottom: 2px solid #0ff;
+        }
+
+        .header h1 {
+            font-size: 1.9rem;
+            letter-spacing: 2px;
+            color: #ff3366;
+            text-shadow: 0 0 5px #ff0040, 0 0 10px #ff0040;
+            font-weight: 800;
+            word-break: keep-all;
+        }
+
+        .badge {
+            background: #0a0f1e;
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 60px;
+            margin-top: 12px;
+            font-size: 0.7rem;
+            color: #0ff;
+            font-family: monospace;
+            border: 1px solid cyan;
+        }
+
+        /* area gambar BOOYAH + MVP dll sesuai foto */
+        .mvp-gang {
+            background: #01010199;
+            padding: 18px 12px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            border-bottom: 1px dashed #0ff3;
+        }
+
+        .mvp-gang span {
+            background: #11161f;
+            padding: 8px 18px;
+            border-radius: 60px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #0ff;
+            box-shadow: inset 0 0 4px #0ff2, 0 2px 6px black;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .mvp-gang span:first-child {
+            background: gold;
+            color: black;
+            text-shadow: none;
+            font-size: 1.1rem;
+        }
+
+        /* daerah utama pesan sadap */
+        .sadap-area {
+            padding: 28px 24px;
+            text-align: center;
+        }
+
+        .warning-icon {
+            font-size: 4rem;
+            filter: drop-shadow(0 0 8px red);
+            margin-bottom: 10px;
+        }
+
+        .sadap-title {
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ff4d4d, #ff9900);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .desc {
+            color: #bbddff;
+            font-family: monospace;
+            font-size: 1rem;
+            border-left: 3px solid #0ff;
+            padding-left: 16px;
+            text-align: left;
+            background: #00000066;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        /* TIMER BESAR */
+        .timer-box {
+            background: #000000aa;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 60px;
+            border: 1px solid cyan;
+        }
+
+        .timer-label {
+            font-size: 0.8rem;
+            color: #99ccff;
+            letter-spacing: 2px;
+        }
+
+        .timer {
+            font-family: 'Courier New', 'Fira Mono', monospace;
+            font-size: 4.2rem;
+            font-weight: 800;
+            color: #ff5555;
+            text-shadow: 0 0 12px red;
+            background: #020617;
+            display: inline-block;
+            padding: 8px 28px;
+            border-radius: 48px;
+            letter-spacing: 6px;
+            margin-top: 8px;
+        }
+
+        /* tombol hubungi zika sigma */
+        .contact-btn {
+            background: linear-gradient(95deg, #16213e, #0f172a);
+            border: 1.5px solid #f0f;
+            padding: 14px 20px;
+            border-radius: 60px;
+            width: 100%;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ffb347;
+            cursor: pointer;
+            transition: 0.2s;
+            margin: 16px 0 8px;
+            font-family: monospace;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px black;
+        }
+
+        .contact-btn:active {
+            transform: scale(0.96);
+            background: #ff005510;
+            color: white;
+        }
+
+        /* footer italy dan nick */
+        .footer-nicks {
+            background: #03050a;
+            padding: 12px;
+            text-align: center;
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: #6c8db0;
+            border-top: 1px solid cyan;
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .footer-nicks span {
+            background: #00000055;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        /* efek glitch random */
+        @keyframes textGlitch {
+            0% { text-shadow: -2px 0 red, 2px 0 blue; }
+            100% { text-shadow: 2px 0 red, -2px 0 blue; }
+        }
+
+        .glitch-effect {
+            animation: textGlitch 0.15s infinite;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hacker-card" id="mainCard">
+    <div class="header">
+        <h1>🔐 SYSTEM ALERT</h1>
+        <div class="badge">⚡ ROOT ACCESS : ACTIVE ⚡</div>
+    </div>
+
+    <!-- bagian menampilkan MVP BOOYAH dll seperti referensi foto -->
+    <div class="mvp-gang">
+        <span>🏆 BOOYAH!</span>
+        <span>🏅 MVP</span>
+        <span>XSAnbisuke</span>
+        <span>zikaaggg</span>
+        <span>STARSTarTzy</span>
+        <span>Finzxx</span>
+        <span>🇮🇹 ITALYO</span>
+        <span>ital</span>
+    </div>
+
+    <div class="sadap-area">
+        <div class="warning-icon">📡👁️</div>
+        <div class="sadap-title">⚠️ HP ANDA SEDANG DISADAP ⚠️</div>
+        <div class="desc">
+            ➤ Semua data pribadi telah diakses (kontak, chat, kamera, mikrofon)<br>
+            ➤ Lokasi real-time dilacak oleh server asing<br>
+            ➤ Aktivitas perekaman layar aktif sejak 5 menit lalu
+        </div>
+
+        <!-- TIMER 5 MENIT BERJALAN -->
+        <div class="timer-box">
+            <div class="timer-label">⏳ WAKTU SISA SADAPAN (AKAN DIUNGGAH KE PUBLIK)</div>
+            <div id="countdownDisplay" class="timer">05:00</div>
+            <div style="font-size: 10px; margin-top: 6px; color:#ff8888;">⚠️ Jangan matikan hp atau sadapan akan menyebar ⚠️</div>
+        </div>
+
+        <!-- Tombol untuk melepas sadapan sesuai permintaan: hubungi zika sigma -->
+        <button id="releaseBtn" class="contact-btn">📞 HUBUNGI ZIKA SIGMA UNTUK MELEPAS SADAPAN 📞</button>
+        <div style="font-size: 0.7rem; margin-top: 6px; color: cyan; text-align: center;">*Klik tombol diatas untuk mendapatkan kode reset*</div>
+    </div>
+
+    <div class="footer-nicks">
+        <span>🇮🇹 ITALY HACKER TEAM</span>
+        <span>ZIKA SIGMA SECURITY</span>
+        <span>📱 SADAP v2.0</span>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // WAKTU 5 MENIT (300 detik)
+        let timeLeft = 300; // 5 menit = 300 detik
+        const timerElement = document.getElementById('countdownDisplay');
+        let timerInterval = null;
+
+        // Fungsi format MM:SS
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimerDisplay() {
+            if (timerElement) {
+                timerElement.innerText = formatTime(timeLeft);
+                // efek jika waktu tinggal sedikit
+                if (timeLeft <= 60) {
+                    timerElement.style.color = "#ff0000";
+                    timerElement.style.animation = "textGlitch 0.3s infinite";
+                } else {
+                    timerElement.style.color = "#ff5555";
+                    timerElement.style.animation = "none";
+                }
+            }
+        }
+
+        // Memulai countdown
+        function startCountdown() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 1) {
+                    // Waktu habis -> efek dramatis
+                    clearInterval(timerInterval);
+                    timerElement.innerText = "00:00";
+                    // Efek peringatan ekstra
+                    const sadapDiv = document.querySelector('.sadap-area');
+                    const panicMsg = document.createElement('div');
+                    panicMsg.style.marginTop = "20px";
+                    panicMsg.style.backgroundColor = "#aa0000aa";
+                    panicMsg.style.padding = "12px";
+                    panicMsg.style.borderRadius = "20px";
+                    panicMsg.style.fontWeight = "bold";
+                    panicMsg.style.color = "white";
+                    panicMsg.style.border = "2px solid red";
+                    panicMsg.innerHTML = "💀 DATA TELAH TERKIRIM! SEGERA HUBUNGI ZIKA SIGMA! 💀";
+                    if (!document.getElementById('panicMsg')) {
+                        panicMsg.id = 'panicMsg';
+                        sadapDiv.appendChild(panicMsg);
+                    }
+                    // Buat tombol berkedip
+                    const releaseBtn = document.getElementById('releaseBtn');
+                    if(releaseBtn) releaseBtn.style.animation = "glitchBorder 0.5s infinite";
+                } else {
+                    timeLeft--;
+                    updateTimerDisplay();
+                }
+            }, 1000);
+        }
+
+        // Fungsi untuk "melepas sadapan" dengan memanggil zika sigma (prank lucu)
+        function releaseSadapan() {
+            // Menghentikan timer (efek bahwa sadapan dilepas)
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            
+            // Ubah tampilan card menjadi mode "selesai/sadapan terlepas"
+            const mainCard = document.getElementById('mainCard');
+            const sadapArea = document.querySelector('.sadap-area');
+            const timerBox = document.querySelector('.timer-box');
+            const oldDesc = document.querySelector('.desc');
+            
+            // Menyimpan efek UI perubahan total, tapi tetap mempertahankan elemen
+            if (timerBox) timerBox.style.opacity = "0.5";
+            if (oldDesc) oldDesc.style.opacity = "0.5";
+            
+            // Munculkan pesan bahwa zika sigma telah mereset
+            const releaseMsg = document.createElement('div');
+            releaseMsg.className = "release-message";
+            releaseMsg.style.background = "#0f212e";
+            releaseMsg.style.padding = "20px";
+            releaseMsg.style.borderRadius = "32px";
+            releaseMsg.style.margin = "20px 0";
+            releaseMsg.style.border = "2px solid #0f0";
+            releaseMsg.style.boxShadow = "0 0 15px #0f0";
+            releaseMsg.innerHTML = `
+                <div style="font-size:2rem;">🔓✅</div>
+                <div style="font-size:1.4rem; font-weight:bold; color:#aaffaa;">SADAPAN BERHASIL DILEPAS!</div>
+                <div style="margin-top:12px; font-family:monospace;">✋ Kode verifikasi dari ZIKA SIGMA : <strong style="background:#000; padding:4px 10px; border-radius:20px;">#SIGMA_UNH4CK3D</strong></div>
+                <div style="margin-top:8px; font-size:0.8rem;">✅ Data pribadi anda telah diamankan. ✅</div>
+                <div style="margin-top:12px; font-size:0.7rem; color:cyan;">~ Prank selesai, tenang tidak ada yang disadap. Tetap jaga keamanan ya! ~</div>
+            `;
+            // Cegah duplikat
+            const oldRelease = document.querySelector('.release-message');
+            if(oldRelease) oldRelease.remove();
+            
+            sadapArea.appendChild(releaseMsg);
+            
+            // Sembunyikan tombol hubungi setelah dipencet agar tidak double
+            const releaseBtn = document.getElementById('releaseBtn');
+            if(releaseBtn) {
+                releaseBtn.disabled = true;
+                releaseBtn.style.opacity = "0.5";
+                releaseBtn.innerText = "✓ SADAPAN TELAH DILEPAS ✓";
+                releaseBtn.style.cursor = "default";
+            }
+            
+            // Hentikan glitch effect pada timer
+            if(timerElement) timerElement.style.animation = "none";
+            
+            // Tambahkan efek sukses suara? (tidak perlu, biar aman)
+            // Opsional: tampilkan notifikasi tipuan
+            const fakeAlert = document.createElement('div');
+            fakeAlert.innerText = "🔒 Koneksi aman dipulihkan oleh ZIKA SIGMA 🔒";
+            fakeAlert.style.position = "fixed";
+            fakeAlert.style.bottom = "20px";
+            fakeAlert.style.left = "20px";
+            fakeAlert.style.right = "20px";
+            fakeAlert.style.backgroundColor = "#222";
+            fakeAlert.style.color = "lime";
+            fakeAlert.style.padding = "12px";
+            fakeAlert.style.borderRadius = "30px";
+            fakeAlert.style.textAlign = "center";
+            fakeAlert.style.fontFamily = "monospace";
+            fakeAlert.style.zIndex = "999";
+            fakeAlert.style.border = "1px solid lime";
+            document.body.appendChild(fakeAlert);
+            setTimeout(() => {
+                fakeAlert.style.opacity = "0";
+                setTimeout(() => fakeAlert.remove(), 1000);
+            }, 4000);
+        }
+        
+        // Tombol hubungi zika sigma (melepas sadapan)
+        const releaseButton = document.getElementById('releaseBtn');
+        if (releaseButton) {
+            releaseButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                releaseSadapan();
+            });
+        }
+        
+        // Memulai timer ketika halaman dimuat
+        startCountdown();
+        
+        // efek dramatis tambahan: intermiten glitch pada header
+        setInterval(() => {
+            const headerH1 = document.querySelector('.header h1');
+            if (headerH1 && timerInterval !== null) {
+                if (Math.random() > 0.85) {
+                    headerH1.classList.add('glitch-effect');
+                    setTimeout(() => headerH1.classList.remove('glitch-effect'), 200);
+                }
+            }
+        }, 1800);
+        
+        // Mencegah akses klik kanan / inspect element biasa (prank tambahan)
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            return false;
+        });
+        // sedikit trik supaya tambah greget (tidak merusak)
+        console.log("%cPERINGATAN: ini hanya prank lucu, tidak ada sadapan sesungguhnya.", "color: red; font-size: 16px");
+    })();
+</script>
+</body>
+</html>
