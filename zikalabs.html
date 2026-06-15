@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termux Lab | Command & Tools Database</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', 'Fira Code', monospace;
+            background: linear-gradient(135deg, #0a0e1a 0%, #0f1322 100%);
+            min-height: 100vh;
+            color: #0f0;
+        }
+
+        /* Login Screen */
+        .login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.5s ease;
+        }
+
+        .login-box {
+            background: rgba(10,20,30,0.9);
+            border: 2px solid #0f0;
+            border-radius: 20px;
+            padding: 40px;
+            width: 350px;
+            box-shadow: 0 0 50px rgba(0,255,0,0.2);
+            text-align: center;
+        }
+
+        .login-box h2 {
+            color: #0f0;
+            margin-bottom: 30px;
+            font-size: 28px;
+            text-shadow: 0 0 10px #0f0;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #1a1f2e;
+            border: 1px solid #0f0;
+            border-radius: 8px;
+            color: #0f0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .login-box input:focus {
+            outline: none;
+            box-shadow: 0 0 10px #0f0;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #0f0;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #0a0;
+            box-shadow: 0 0 20px #0f0;
+        }
+
+        .error-msg {
+            color: #f00;
+            margin-top: 15px;
+            font-size: 12px;
+        }
+
+        /* Main Content (hidden initially) */
+        .main-content {
+            display: none;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(0,0,0,0.7);
+            border-bottom: 2px solid #0f0;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            color: #0f0;
+            font-size: 24px;
+            text-shadow: 0 0 5px #0f0;
+        }
+
+        .header .user-info {
+            color: #0f0;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            background: #f00;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Search & Filter */
+        .search-section {
+            margin: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .search-section input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px;
+            background: #1a1f2e;
+            border: 1px solid #0f0;
+            border-radius: 8px;
+            color: #0f0;
+            font-family: monospace;
+        }
+
+        .category-filter {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .cat-btn {
+            background: #1a1f2e;
+            border: 1px solid #0f0;
+            color: #0f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .cat-btn.active {
+            background: #0f0;
+            color: #000;
+        }
+
+        /* Cards Grid */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(20,25,40,0.9);
+            border-left: 4px solid #0f0;
+            border-radius: 10px;
+            padding: 18px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,255,0,0.2);
+        }
+
+        .card h3 {
+            color: #0f0;
+            margin-bottom: 8px;
+            font-size: 20px;
+        }
+
+        .card .command {
+            background: #000;
+            padding: 8px;
+            border-radius: 5px;
+            font-family: monospace;
+            color: #ff0;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        .card .desc {
+            color: #aaa;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .card .tag {
+            display: inline-block;
+            background: #0f0;
+            color: #000;
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        /* Tools Section */
+        .tools-section {
+            margin: 30px 20px;
+        }
+
+        .tools-section h2 {
+            color: #0f0;
+            border-bottom: 1px solid #0f0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .tool-card {
+            background: #0a0e18;
+            border: 1px solid #2a2e3e;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .tool-card h4 {
+            color: #0f0;
+        }
+
+        .install-cmd {
+            background: #000;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 11px;
+            margin-top: 10px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #1a2a1a;
+            color: #555;
+            font-size: 12px;
+        }
+
+        /* Copy notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #0f0;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            z-index: 1000;
+            animation: fadeOut 2s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Login Container -->
+<div class="login-container" id="loginContainer">
+    <div class="login-box">
+        <h2>🔐 TERMUX LAB</h2>
+        <input type="text" id="username" placeholder="Username" autocomplete="off">
+        <input type="password" id="key" placeholder="Key">
+        <button class="login-btn" onclick="login()">➤ ACCESS GRANTED</button>
+        <div class="error-msg" id="errorMsg"></div>
+        <div style="margin-top: 20px; font-size: 11px; color: #444;">Authorized access only</div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content" id="mainContent">
+    <div class="header">
+        <h1>💻 Termux Lab | Commands & Tools</h1>
+        <div class="user-info">
+            <span id="loggedUser">zika</span> | 
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="search-section">
+        <input type="text" id="searchInput" placeholder="🔍 Cari command atau tools..." onkeyup="filterData()">
+        <div class="category-filter">
+            <button class="cat-btn active" data-cat="all" onclick="setCategory('all')">All</button>
+            <button class="cat-btn" data-cat="basic" onclick="setCategory('basic')">Basic</button>
+            <button class="cat-btn" data-cat="network" onclick="setCategory('network')">Network</button>
+            <button class="cat-btn" data-cat="info" onclick="setCategory('info')">Info</button>
+            <button class="cat-btn" data-cat="tools" onclick="setCategory('tools')">Tools</button>
+        </div>
+    </div>
+
+    <div id="cardsContainer" class="cards-container"></div>
+
+    <div class="tools-section">
+        <h2>🛠️ Recommended Termux Tools</h2>
+        <div class="tools-grid" id="toolsGrid"></div>
+    </div>
+
+    <div class="footer">
+        Termux Lab v2.0 | Educational Purpose | Command Database
+    </div>
+</div>
+
+<script>
+    // ============ DATABASE COMMANDS ============
+    const commands = [
+        // Basic Commands
+        { cmd: "pkg update && pkg upgrade", desc: "Update all packages to latest version", category: "basic", tag: "essential" },
+        { cmd: "pkg install [nama_paket]", desc: "Install specific package", category: "basic", tag: "install" },
+        { cmd: "pkg uninstall [nama_paket]", desc: "Uninstall package", category: "basic", tag: "remove" },
+        { cmd: "pkg list-all", desc: "List all available packages", category: "basic", tag: "info" },
+        { cmd: "pwd", desc: "Print current working directory path", category: "basic", tag: "navigation" },
+        { cmd: "ls", desc: "List all files and folders in current directory", category: "basic", tag: "navigation" },
+        { cmd: "ls -la", desc: "List all files including hidden with details", category: "basic", tag: "navigation" },
+        { cmd: "cd [folder]", desc: "Change directory", category: "basic", tag: "navigation" },
+        { cmd: "cd ..", desc: "Go back one directory", category: "basic", tag: "navigation" },
+        { cmd: "cd ~", desc: "Go to home directory", category: "basic", tag: "navigation" },
+        { cmd: "mkdir [nama_folder]", desc: "Create new directory/folder", category: "basic", tag: "create" },
+        { cmd: "rm [file]", desc: "Delete file", category: "basic", tag: "delete" },
+        { cmd: "rm -rf [folder]", desc: "Force delete folder and its contents", category: "basic", tag: "delete" },
+        { cmd: "cp [source] [dest]", desc: "Copy file or folder", category: "basic", tag: "copy" },
+        { cmd: "mv [source] [dest]", desc: "Move or rename file/folder", category: "basic", tag: "move" },
+        { cmd: "cat [file]", desc: "View file content", category: "basic", tag: "view" },
+        { cmd: "nano [file]", desc: "Edit file with nano editor", category: "basic", tag: "edit" },
+        { cmd: "vim [file]", desc: "Edit file with vim editor", category: "basic", tag: "edit" },
+        { cmd: "chmod +x [file]", desc: "Make file executable", category: "basic", tag: "permission" },
+        { cmd: "clear", desc: "Clear terminal screen", category: "basic", tag: "utility" },
+        { cmd: "history", desc: "Show command history", category: "basic", tag: "utility" },
+        { cmd: "exit", desc: "Exit Termux session", category: "basic", tag: "utility" },
+        
+        // Network Commands
+        { cmd: "ifconfig", desc: "Show network interfaces", category: "network", tag: "net" },
+        { cmd: "ping [ip/domain]", desc: "Test network connectivity", category: "network", tag: "net" },
+        { cmd: "netstat", desc: "Show network statistics", category: "network", tag: "net" },
+        { cmd: "curl [url]", desc: "Transfer data from/to server", category: "network", tag: "http" },
+        { cmd: "wget [url]", desc: "Download file from internet", category: "network", tag: "download" },
+        { cmd: "nslookup [domain]", desc: "Query DNS records", category: "network", tag: "dns" },
+        { cmd: "termux-wifi-connectioninfo", desc: "Show WiFi connection info", category: "network", tag: "termux" },
+        { cmd: "ssh [user]@[ip]", desc: "SSH connection to remote server", category: "network", tag: "remote" },
+        { cmd: "nc -lvnp [port]", desc: "Netcat listener (reverse shell)", category: "network", tag: "netcat" },
+        
+        // Info Commands
+        { cmd: "whoami", desc: "Show current username", category: "info", tag: "user" },
+        { cmd: "uname -a", desc: "Show system information", category: "info", tag: "system" },
+        { cmd: "df -h", desc: "Show storage usage", category: "info", tag: "storage" },
+        { cmd: "free -h", desc: "Show RAM usage", category: "info", tag: "memory" },
+        { cmd: "top", desc: "Show running processes", category: "info", tag: "process" },
+        { cmd: "ps aux", desc: "List all running processes", category: "info", tag: "process" },
+        { cmd: "termux-info", desc: "Show Termux system info", category: "info", tag: "termux" },
+        { cmd: "getprop", desc: "Show Android device properties", category: "info", tag: "android" },
+        
+        // Tools & Installation
+        { cmd: "pkg install git", desc: "Install Git version control", category: "tools", tag: "install" },
+        { cmd: "pkg install python", desc: "Install Python 3", category: "tools", tag: "install" },
+        { cmd: "pkg install python2", desc: "Install Python 2", category: "tools", tag: "install" },
+        { cmd: "pkg install nodejs", desc: "Install Node.js", category: "tools", tag: "install" },
+        { cmd: "pkg install php", desc: "Install PHP", category: "tools", tag: "install" },
+        { cmd: "pkg install ruby", desc: "Install Ruby", category: "tools", tag: "install" },
+        { cmd: "pkg install golang", desc: "Install Go language", category: "tools", tag: "install" },
+        { cmd: "pkg install nmap", desc: "Install Nmap port scanner", category: "tools", tag: "security" },
+        { cmd: "pkg install hydra", desc: "Install Hydra password cracker", category: "tools", tag: "security" },
+        { cmd: "pkg install metasploit", desc: "Install Metasploit Framework", category: "tools", tag: "security" },
+        { cmd: "pkg install sqlmap", desc: "Install SQL injection tool", category: "tools", tag: "security" },
+        { cmd: "pkg install tor", desc: "Install Tor anonymity", category: "tools", tag: "privacy" }
+    ];
+
+    const tools = [
+        { name: "Nmap", desc: "Network discovery and security scanning", install: "pkg install nmap -y" },
+        { name: "Hydra", desc: "Login cracker (brute force)", install: "pkg install hydra -y" },
+        { name: "Metasploit", desc: "Penetration testing framework", install: "pkg install metasploit -y" },
+        { name: "SQLmap", desc: "Automatic SQL injection tool", install: "pkg install sqlmap -y" },
+        { name: "John the Ripper", desc: "Password cracking tool", install: "pkg install john -y" },
+        { name: "Aircrack-ng", desc: "WiFi security auditing", install: "pkg install aircrack-ng -y" },
+        { name: "Hashcat", desc: "Advanced password recovery", install: "pkg install hashcat -y" },
+        { name: "SocialFish", desc: "Phishing tool (Instagram, Facebook)", install: "git clone https://github.com/UndeadSec/SocialFish" },
+        { name: "CamHack", desc: "Hack camera using link", install: "git clone https://github.com/AngelSecurityTeam/Cam-Hack" },
+        { name: "IP-Tracker", desc: "Track IP address location", install: "git clone https://github.com/rajkumardusad/IP-Tracker" },
+        { name: "TBomb", desc: "SMS/Call bomber", install: "git clone https://github.com/TheSpeedX/TBomb" },
+        { name: "Zphisher", desc: "Phishing tool with 30+ templates", install: "git clone https://github.com/htr-tech/zphisher" },
+        { name: "HiddenEye", desc: "Advanced phishing tool", install: "git clone https://github.com/DarkSecDevelopers/HiddenEye" },
+        { name: "Weeman", desc: "HTTP phishing tool", install: "git clone https://github.com/evait-security/weeman" },
+        { name: "RedHawk", desc: "Web vulnerability scanner", install: "git clone https://github.com/Tuhinshubhra/RED_HAWK" }
+    ];
+
+    let currentCategory = "all";
+    let searchTerm = "";
+
+    function renderCards() {
+        const container = document.getElementById("cardsContainer");
+        let filtered = commands;
+
+        if (currentCategory !== "all") {
+            filtered = filtered.filter(c => c.category === currentCategory);
+        }
+
+        if (searchTerm) {
+            filtered = filtered.filter(c => 
+                c.cmd.toLowerCase().includes(searchTerm) || 
+                c.desc.toLowerCase().includes(searchTerm)
+            );
+        }
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px;">❌ No commands found</div>';
+            return;
+        }
+
+        container.innerHTML = filtered.map(cmd => `
+            <div class="card" onclick="copyToClipboard('${cmd.cmd.replace(/'/g, "\\'")}')">
+                <h3>📌 ${cmd.cmd.split(' ')[0]}</h3>
+                <div class="command">${cmd.cmd}</div>
+                <div class="desc">${cmd.desc}</div>
+                <span class="tag">${cmd.category}</span>
+                ${cmd.tag ? `<span class="tag" style="background:#333; color:#0f0;">#${cmd.tag}</span>` : ''}
+            </div>
+        `).join('');
+    }
+
+    function renderTools() {
+        const container = document.getElementById("toolsGrid");
+        container.innerHTML = tools.map(tool => `
+            <div class="tool-card">
+                <h4>🔧 ${tool.name}</h4>
+                <div class="desc">${tool.desc}</div>
+                <div class="install-cmd" onclick="copyToClipboard('${tool.install.replace(/'/g, "\\'")}')">
+                    💻 ${tool.install}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function filterData() {
+        searchTerm = document.getElementById("searchInput").value.toLowerCase();
+        renderCards();
+    }
+
+    function setCategory(cat) {
+        currentCategory = cat;
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            if (btn.dataset.cat === cat) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        renderCards();
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text);
+        showToast(`✓ Copied: ${text.substring(0, 50)}${text.length > 50 ? '...' : ''}`);
+    }
+
+    function showToast(msg) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
+
+    // ============ LOGIN SYSTEM ============
+    const VALID_USER = "zika";
+    const VALID_KEY = "011";
+
+    function login() {
+        const username = document.getElementById("username").value.trim();
+        const key = document.getElementById("key").value.trim();
+        const errorMsg = document.getElementById("errorMsg");
+
+        if (username === VALID_USER && key === VALID_KEY) {
+            localStorage.setItem("termux_logged", "true");
+            localStorage.setItem("termux_user", username);
+            document.getElementById("loginContainer").style.display = "none";
+            document.getElementById("mainContent").style.display = "block";
+            document.getElementById("loggedUser").innerText = username;
+            renderCards();
+            renderTools();
+        } else {
+            errorMsg.innerText = "❌ ACCESS DENIED! Username atau Key salah!";
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem("termux_logged");
+        localStorage.removeItem("termux_user");
+        document.getElementById("loginContainer").style.display = "flex";
+        document.getElementById("mainContent").style.display = "none";
+        document.getElementById("username").value = "";
+        document.getElementById("key").value = "";
+        document.getElementById("errorMsg").innerText = "";
+    }
+
+    // Check session on load
+    if (localStorage.getItem("termux_logged") === "true") {
+        document.getElementById("loginContainer").style.display = "none";
+        document.getElementById("mainContent").style.display = "block";
+        document.getElementById("loggedUser").innerText = localStorage.getItem("termux_user") || "zika";
+        renderCards();
+        renderTools();
+    }
+</script>
+</body>
+</html>
