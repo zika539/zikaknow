@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demo Trading - LUBV</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #0b0e14;
+            color: #e0e6f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: #141a24;
+            border-radius: 24px;
+            padding: 30px 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+            border: 1px solid #2a3340;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 small {
+            font-size: 14px;
+            font-weight: 400;
+            color: #7a8a9e;
+            background: #1f2835;
+            padding: 4px 14px;
+            border-radius: 40px;
+        }
+        .balance-box {
+            background: #1e2735;
+            border-radius: 16px;
+            padding: 18px 22px;
+            margin: 18px 0 22px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #3b82f6;
+        }
+        .balance-box span:first-child {
+            font-size: 16px;
+            color: #a0b3cc;
+        }
+        .balance-box .amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        .balance-box .amount.positive { color: #4ade80; }
+        .balance-box .amount.negative { color: #f87171; }
+        .chart-placeholder {
+            background: #0f1620;
+            border-radius: 16px;
+            height: 180px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: flex-end;
+            padding: 10px 12px 10px 12px;
+            border: 1px solid #293241;
+            position: relative;
+        }
+        .bar {
+            flex: 1;
+            margin: 0 3px;
+            background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+            border-radius: 6px 6px 0 0;
+            min-height: 12px;
+            transition: height 0.3s ease;
+            height: 40px;
+        }
+        .bar.green { background: linear-gradient(180deg, #4ade80, #16a34a); }
+        .bar.red { background: linear-gradient(180deg, #f87171, #dc2626); }
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin: 18px 0 14px 0;
+        }
+        .controls button {
+            background: #1f2838;
+            border: none;
+            padding: 14px 0;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #d0dcec;
+            cursor: pointer;
+            transition: 0.15s;
+            border: 1px solid #2f3a4a;
+        }
+        .controls button:hover { background: #2a3548; transform: scale(0.97); }
+        .controls button.buy { background: #0f3b2a; border-color: #2e7d5a; color: #86efac; }
+        .controls button.buy:hover { background: #145a3e; }
+        .controls button.sell { background: #3b1a1a; border-color: #7d2e2e; color: #fca5a5; }
+        .controls button.sell:hover { background: #5a2222; }
+        .controls button.reset { background: #1e2635; border-color: #3a4458; color: #b0c4e0; }
+        .trade-log {
+            background: #0f1620;
+            border-radius: 16px;
+            padding: 14px 18px;
+            margin-top: 16px;
+            max-height: 140px;
+            overflow-y: auto;
+            font-size: 14px;
+            border: 1px solid #293241;
+        }
+        .trade-log p {
+            padding: 5px 0;
+            border-bottom: 1px solid #1a232f;
+            color: #b8c8dd;
+        }
+        .trade-log p:last-child { border-bottom: none; }
+        .trade-log .win { color: #4ade80; }
+        .trade-log .loss { color: #f87171; }
+        .trade-log .info { color: #60a5fa; }
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0 6px 0;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .input-row input {
+            flex: 2;
+            min-width: 120px;
+            background: #0f1620;
+            border: 1px solid #293241;
+            border-radius: 40px;
+            padding: 12px 18px;
+            font-size: 16px;
+            color: #e6edf5;
+            outline: none;
+        }
+        .input-row input:focus { border-color: #3b82f6; }
+        .input-row label {
+            color: #a0b3cc;
+            font-weight: 500;
+        }
+        .status-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #7a8a9e;
+            margin-top: 6px;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0b0e14; }
+        ::-webkit-scrollbar-thumb { background: #2f3a4a; border-radius: 12px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📊 Demo Trading <small>LUBV · simulasi</small></h1>
+
+    <div class="balance-box">
+        <span>💰 Saldo</span>
+        <span class="amount" id="balanceDisplay">10.000</span>
+    </div>
+
+    <!-- Grafik harga sederhana (bar) -->
+    <div class="chart-placeholder" id="chartContainer"></div>
+
+    <div class="input-row">
+        <label for="tradeAmount">Jumlah (USD):</label>
+        <input type="number" id="tradeAmount" value="100" min="1" step="10" />
+    </div>
+
+    <div class="controls">
+        <button class="buy" id="btnBuy">📈 BELI</button>
+        <button class="sell" id="btnSell">📉 JUAL</button>
+        <button class="reset" id="btnReset">⟳ Reset</button>
+    </div>
+
+    <div class="status-line">
+        <span id="lastPriceLabel">Harga terakhir: 1.234,50</span>
+        <span id="tradeCount">Total transaksi: 0</span>
+    </div>
+
+    <div class="trade-log" id="tradeLog">
+        <p class="info">📋 Selamat datang di demo trading. Mulai beli/jual!</p>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ===== STATE =====
+        let balance = 10000;           // saldo dalam USD
+        let price = 1234.50;           // harga aset saat ini
+        let trades = 0;
+        const logEl = document.getElementById('tradeLog');
+        const balanceEl = document.getElementById('balanceDisplay');
+        const priceLabel = document.getElementById('lastPriceLabel');
+        const tradeCountEl = document.getElementById('tradeCount');
+        const chartContainer = document.getElementById('chartContainer');
+
+        // history untuk grafik (15 bar terakhir)
+        let priceHistory = [];
+
+        // ===== FUNGSI =====
+        function updateUI() {
+            // update saldo
+            balanceEl.textContent = balance.toFixed(2);
+            // update harga
+            priceLabel.textContent = `Harga terakhir: ${price.toFixed(2)}`;
+            tradeCountEl.textContent = `Total transaksi: ${trades}`;
+            // warna saldo
+            if (balance >= 10000) {
+                balanceEl.className = 'amount positive';
+            } else {
+                balanceEl.className = 'amount negative';
+            }
+            // render chart
+            renderChart();
+        }
+
+        function renderChart() {
+            // ambil 15 harga terakhir, kalau kurang tambahin dummy
+            let data = priceHistory.slice(-15);
+            while (data.length < 15) {
+                data.push(price);
+            }
+            // buat bar
+            chartContainer.innerHTML = '';
+            const maxVal = Math.max(...data, 1);
+            const minVal = Math.min(...data, 0);
+            const range = maxVal - minVal || 1;
+
+            data.forEach((val, idx) => {
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                // tinggi relatif (10% s/d 100%)
+                const pct = 10 + ((val - minVal) / range) * 90;
+                bar.style.height = Math.max(12, pct) + '%';
+                // warna berdasarkan arah dari harga sebelumnya
+                if (idx > 0 && data[idx] > data[idx-1]) {
+                    bar.classList.add('green');
+                } else if (idx > 0 && data[idx] < data[idx-1]) {
+                    bar.classList.add('red');
+                } else {
+                    bar.style.background = 'linear-gradient(180deg, #6b7a8f, #3a4658)';
+                }
+                chartContainer.appendChild(bar);
+            });
+        }
+
+        // log pesan
+        function addLog(message, type = 'info') {
+            const p = document.createElement('p');
+            p.className = type;
+            p.textContent = message;
+            logEl.prepend(p); // tampilkan yang terbaru di atas
+            // batasi jumlah log
+            while (logEl.children.length > 30) {
+                logEl.removeChild(logEl.lastChild);
+            }
+        }
+
+        // generate perubahan harga acak (simulasi market)
+        function randomPriceChange() {
+            const change = (Math.random() - 0.48) * 8; // -4 .. +4
+            price = Math.max(800, price + change);
+            price = Math.round(price * 100) / 100;
+            priceHistory.push(price);
+            if (priceHistory.length > 50) priceHistory.shift();
+            updateUI();
+        }
+
+        // eksekusi trade
+        function executeTrade(direction) {
+            const amountInput = document.getElementById('tradeAmount');
+            let amount = parseFloat(amountInput.value);
+            if (isNaN(amount) || amount <= 0) {
+                addLog('⚠️ Masukkan jumlah yang valid (min 1 USD)', 'info');
+                return;
+            }
+            // batasi agar tidak melebihi saldo
+            if (amount > balance) {
+                addLog(`❌ Saldo tidak mencukupi (${balance.toFixed(2)} USD tersisa)`, 'loss');
+                return;
+            }
+
+            // simulasikan spread / biaya kecil
+            const fee = amount * 0.001; // 0.1% biaya transaksi
+            const totalCost = amount + fee;
+
+            if (totalCost > balance) {
+                addLog(`❌ Saldo tidak cukup untuk biaya transaksi (fee ${fee.toFixed(2)})`, 'loss');
+                return;
+            }
+
+            // Ambil harga saat ini untuk eksekusi
+            const execPrice = price;
+            // random pergerakan setelah eksekusi (slippage simulasi)
+            const move = (Math.random() - 0.5) * 3.5; // -1.75 .. +1.75
+            const newPrice = Math.max(800, execPrice + move);
+            const priceDiff = newPrice - execPrice;
+
+            // profit/loss tergantung arah
+            let profit = 0;
+            let directionText = '';
+            if (direction === 'buy') {
+                profit = (priceDiff / execPrice) * amount;
+                directionText = 'BELI';
+            } else { // sell
+                profit = -(priceDiff / execPrice) * amount;
+                directionText = 'JUAL';
+            }
+            // potong fee dari profit (atau tambah loss)
+            const netProfit = profit - fee;
+            const newBalance = balance + netProfit;
+            const roundedProfit = Math.round(netProfit * 100) / 100;
+
+            // update balance
+            balance = Math.round(newBalance * 100) / 100;
+            if (balance < 0) balance = 0;
+
+            // update harga
+            price = Math.round(newPrice * 100) / 100;
+            priceHistory.push(price);
+            if (priceHistory.length > 50) priceHistory.shift();
+
+            trades++;
+
+            // log
+            const profitSign = netProfit >= 0 ? '+' : '';
+            const emoji = netProfit >= 0 ? '✅' : '❌';
+            const typeClass = netProfit >= 0 ? 'win' : 'loss';
+            addLog(
+                `${emoji} ${directionText} ${amount.toFixed(2)} USD @ ${execPrice.toFixed(2)} → ${price.toFixed(2)} | ${profitSign}${roundedProfit.toFixed(2)} USD (fee ${fee.toFixed(2)})`,
+                typeClass
+            );
+
+            // update UI
+            updateUI();
+
+            // cek jika saldo 0
+            if (balance === 0) {
+                addLog('💀 Saldo nol. Tekan Reset untuk memulai lagi.', 'info');
+            }
+        }
+
+        // reset
+        function resetAll() {
+            balance = 10000;
+            price = 1234.50;
+            trades = 0;
+            priceHistory = [];
+            // isi history dengan harga awal
+            for (let i = 0; i < 15; i++) {
+                priceHistory.push(price + (Math.random() - 0.5) * 6);
+            }
+            priceHistory = priceHistory.map(v => Math.round(v * 100) / 100);
+            // set harga terakhir dari history
+            price = priceHistory[priceHistory.length - 1];
+            updateUI();
+            // kosongkan log kecuali pesan pertama
+            logEl.innerHTML = '<p class="info">🔄 Reset selesai. Mulai trading!</p>';
+            addLog('💰 Saldo direset ke 10.000 USD', 'info');
+        }
+
+        // ===== INISIALISASI =====
+        function init() {
+            // isi history awal
+            for (let i = 0; i < 15; i++) {
+                priceHistory.push(price + (Math.random() - 0.5) * 6);
+            }
+            priceHistory = priceHistory.map(v => Math.round(v * 100) / 100);
+            price = priceHistory[priceHistory.length - 1];
+            updateUI();
+            addLog('🚀 Demo siap. Gunakan tombol BELI / JUAL.', 'info');
+
+            // event listener
+            document.getElementById('btnBuy').addEventListener('click', function() {
+                executeTrade('buy');
+            });
+            document.getElementById('btnSell').addEventListener('click', function() {
+                executeTrade('sell');
+            });
+            document.getElementById('btnReset').addEventListener('click', resetAll);
+
+            // auto update harga setiap 3 detik (simulasi pasar)
+            setInterval(randomPriceChange, 3200);
+        }
+
+        init();
+    })();
+</script>
+</body>
+</html>
