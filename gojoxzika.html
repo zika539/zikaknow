@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ARSENAL LABS - 1100 TOOLS ULTIMATE</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a0a;
+            min-height: 100vh;
+            font-family: 'Orbitron', monospace;
+            overflow-x: hidden;
+        }
+        .container { max-width: 1600px; margin: 0 auto; padding: 15px; }
+        .title {
+            font-size: 2.2rem;
+            background: linear-gradient(45deg, #ff0044, #ff4400, #ff00ff, #ff0044);
+            background-size: 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 2s ease-in-out infinite;
+            text-align: center;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .subtitle {
+            text-align: center;
+            color: #ff4444;
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            margin: 5px 0 15px;
+        }
+        .gojo-section {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            border: 2px solid #ff0044;
+            box-shadow: 0 0 40px rgba(255,0,68,0.4);
+            overflow: hidden;
+            cursor: pointer;
+            animation: borderPulse 2s ease-in-out infinite;
+        }
+        @keyframes borderPulse {
+            0%, 100% { box-shadow: 0 0 40px rgba(255,0,68,0.3); }
+            50% { box-shadow: 0 0 80px rgba(255,0,68,0.7); }
+        }
+        .gojo-section img { width: 100%; height: 100%; object-fit: cover; }
+        .terminal {
+            background: rgba(0,0,0,0.85);
+            border: 2px solid #ff0044;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 0 40px rgba(255,0,68,0.1);
+        }
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,0,68,0.15);
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .terminal-dots { display: flex; gap: 6px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: #ff0044; }
+        .dot.yellow { background: #ffaa00; }
+        .dot.green { background: #00ff41; animation: blink 1s infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+        .terminal-title { color: #ff4444; font-size: 0.65rem; letter-spacing: 1px; }
+        .status { color: #00ff41; font-size: 0.6rem; animation: blink 1.5s infinite; }
+        
+        .category {
+            color: #ff0044;
+            font-size: 0.55rem;
+            letter-spacing: 2px;
+            margin: 12px 0 5px;
+            border-bottom: 1px solid rgba(255,0,68,0.1);
+            padding-bottom: 4px;
+        }
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+            gap: 5px;
+            margin: 5px 0 10px;
+        }
+        .tool-item {
+            background: rgba(255,0,68,0.04);
+            border: 1px solid rgba(255,0,68,0.1);
+            padding: 6px 4px;
+            text-align: center;
+            border-radius: 5px;
+            color: #ff6666;
+            font-size: 0.4rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .tool-item:hover {
+            background: rgba(255,0,68,0.12);
+            box-shadow: 0 0 15px rgba(255,0,68,0.2);
+            transform: scale(1.03);
+            border-color: #ff0044;
+        }
+        .tool-item .icon { font-size: 0.9rem; display: block; }
+        .tool-item .badge {
+            font-size: 0.3rem;
+            background: #ff0044;
+            color: #000;
+            padding: 1px 3px;
+            border-radius: 2px;
+            margin-left: 2px;
+        }
+        
+        .input-area {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+        .input-area input {
+            flex: 1;
+            min-width: 150px;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,0,68,0.25);
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: #ff6666;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.6rem;
+            outline: none;
+        }
+        .input-area input:focus {
+            border-color: #ff0044;
+            box-shadow: 0 0 20px rgba(255,0,68,0.15);
+        }
+        .btn {
+            padding: 10px 22px;
+            background: linear-gradient(45deg, #ff0044, #ff4400);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 0.6rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(255,0,68,0.4); }
+        .btn-danger { background: linear-gradient(45deg, #440022, #220011); color: #fff; }
+        
+        .output {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,0,68,0.1);
+            border-radius: 8px;
+            padding: 12px;
+            min-height: 120px;
+            max-height: 250px;
+            overflow-y: auto;
+            color: #ff6666;
+            font-family: 'Courier New', monospace;
+            font-size: 0.6rem;
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+        .output::-webkit-scrollbar { width: 4px; }
+        .output::-webkit-scrollbar-thumb { background: #ff0044; border-radius: 2px; }
+        .output .highlight { color: #ffff00; }
+        .output .error { color: #ff0044; }
+        .output .success { color: #00ff41; }
+        .output .info { color: #00ccff; }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px 0;
+            border-top: 1px solid rgba(255,0,68,0.08);
+            margin-top: 10px;
+            color: rgba(255,0,68,0.4);
+            font-size: 0.5rem;
+        }
+        .stats .value { color: #ff4444; }
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.02;
+            font-family: monospace;
+            color: #ff0044;
+            font-size: 8px;
+            overflow: hidden;
+        }
+        @media (max-width: 600px) {
+            .title { font-size: 1.4rem; }
+            .gojo-section { width: 80px; height: 80px; }
+            .tool-grid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); }
+            .terminal { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="matrix-rain" id="matrixRain"></div>
+
+<div class="container">
+    <div class="gojo-section" id="gojoSection">
+        <img src="https://media.tenor.com/7Wq7tP8QxWgAAAAC/gojo-satoru.gif" alt="Gojo" />
+    </div>
+    <div class="title">ARSENAL LABS</div>
+    <div class="subtitle">✦ 1100 TOOLS ULTIMATE EDITION ✦</div>
+
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="terminal-dots">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            <div class="terminal-title">⚡ NEXUS-OMNI :: 1100 TOOLS</div>
+            <div class="status">● UNRESTRICTED</div>
+        </div>
+
+        <!-- 10 Categories x 110 tools each = 1100 -->
+        <div id="allCategories"></div>
+
+        <div class="input-area">
+            <input type="text" id="cmdInput" placeholder="➜ ketik perintah atau tool..." />
+            <button class="btn" onclick="executeCommand()">▶ EXEC</button>
+            <button class="btn btn-danger" onclick="clearOutput()">✕</button>
+        </div>
+
+        <div class="output" id="outputArea">
+            <span class="success">⧩ 1100 TOOLS LOADED</span><br>
+            <span class="info">> Pilih tool atau ketik perintah.</span>
+        </div>
+
+        <div class="stats">
+            <span>🔗 CONN: <span class="value" id="connCount">2,847</span></span>
+            <span>⚡ TOOLS: <span class="value">1,100</span></span>
+            <span>🕒 UPTIME: <span class="value" id="uptime">00:00:00</span></span>
+            <span>🧠 LUBV: <span class="value" style="color:#00ff41;">● ACTIVE</span></span>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// 1100 TOOL DATABASE - 10 CATEGORIES x 110 TOOLS
+// ============================================================
+
+const toolCategories = [
+    { name: '🔥 MALWARE', prefix: 'M', count: 110 },
+    { name: '💣 EXPLOSIVES', prefix: 'E', count: 110 },
+    { name: '🔫 WEAPONS', prefix: 'W', count: 110 },
+    { name: '🔓 HACKING', prefix: 'H', count: 110 },
+    { name: '🪪 FORGERY', prefix: 'F', count: 110 },
+    { name: '🕵️ SPYING', prefix: 'S', count: 110 },
+    { name: '💀 DESTRUCTION', prefix: 'D', count: 110 },
+    { name: '🌐 NETWORK', prefix: 'N', count: 110 },
+    { name: '🧪 CHEMICAL', prefix: 'C', count: 110 },
+    { name: '⚡ EXPLOITS', prefix: 'X', count: 110 }
+];
+
+// Generate tool names dynamically
+function generateTools() {
+    const toolNames = {
+        malware: ['Ransomware','Keylogger','Spyware','Rootkit','Bootkit','Wiper','Dropper','Downloader','Backdoor','RAT','Botnet','Crypter','Obfuscator','Packer','Injector','Hijacker','Cloner','Scraper','DDoS','Miner','Stealer','Logger','Proxy','VPNKiller','FirewallBypass','AVEvader','SandboxEscape','Persistence','PrivEsc','LateralMove','CredDump','HashDump','PassTheHash','GoldenTicket','SilverTicket','SkeletonKey','Mimikatz','BloodHound','Rubeus','CobaltStrike','Sliver','Empire','PoshC2','Merlin','Havoc','BruteRAT','QuasarRAT','AsyncRAT','NanoCore','Remcos','NetWire','DarkComet','Orcus','Pegasus','Predator','FinSpy','Gamma','HackingTeam','Zerodium','NSO','Intellexa','Candiru','QuaDream','Moscow','Beijing','TelAviv','London','Washington','Mumbai','Tokyo','Seoul','Berlin','Paris','Rome','Madrid','Lisbon','Amsterdam','Brussels','Vienna','Zurich','Geneva','Oslo','Stockholm','Helsinki','Copenhagen','Dublin','Edinburgh','Cardiff','Belfast','Athens','Warsaw','Prague','Budapest','Sofia','Bucharest','Belgrade','Zagreb','Sarajevo','Skopje','Tirana','Riga','Vilnius','Tallinn','Kiev','Minsk','Tbilisi','Yerevan','Baku','Astana','Tashkent'],
+        explosives: ['TNT','C4','RDX','HMX','PETN','Semtex','Dynamite','Nitroglycerin','Ammonal','ANFO','UreaNitrate','AcetonePeroxide','HMTD','TATP','DADP','MNA','Picric','LeadAzide','MercuryFulminate','SodiumChlorate','PotassiumChlorate','BariumNitrate','AluminumPowder','Magnesium','Zinc','Sulfur','Charcoal','Saltpeter','Guncotton','Nitrocellulose','Smokeless','Ballistite','Cordite','FlashPowder','Thermite','Thermate','Aluminotherm','MagnesiumThermite','CopperThermite','IronThermite','SulfurThermite','PotassiumPermanganate','Glycerin','Sulfuric','Nitric','Hydrochloric','Perchloric','Chromic','Acetic','Formic','Oxalic','Tartaric','Citric','Malic','Succinic','Benzoic','Salicylic','Aspirin','Paracetamol','Caffeine','Nicotine','Atropine','Strychnine','Cyanide','Arsenic','Mercury','Lead','Cadmium','Thallium','Polonium','Plutonium','Uranium','Thorium','Radium','Americium','Neptunium','Curium','Berkelium','Californium','Einsteinium','Fermium','Mendelevium','Nobelium','Lawrencium','Rutherfordium','Dubnium','Seaborgium','Bohrium','Hassium','Meitnerium','Darmstadtium','Roentgenium','Copernicium','Nihonium','Flerovium','Moscovium','Livermorium','Tennessine','Oganesson','Francium','Astatine','Radon','Xenon','Krypton','Argon','Neon','Helium'],
+        weapons: ['Pistol','Revolver','Shotgun','Rifle','Carbine','SMG','LMG','HMG','Sniper','AntiMateriel','DesignatedMarksman','AssaultRifle','BattleRifle','Shotgun','Submachine','MachinePistol','PDW','DMR','GrenadeLauncher','RPG','ATGM','MANPADS','RecoillessRifle','Mortar','Howitzer','Cannon','Railgun','Coilgun','Lasers','Microwave','Sonic','Taser','PepperSpray','CSGas','TearGas','Smoke','Flashbang','StunGrenade','FragGrenade','Incendiary','Thermobaric','Vacuum','FuelAir','Cluster','DaisyCutter','MOAB','FOAB','HydrogenBomb','NeutronBomb','CobaltBomb','SaltedBomb','DirtyBomb','EMP','ChemicalAgent','NerveGas','BlisterAgent','BloodAgent','ChokingAgent','VX','Sarin','Soman','Tabun','Cyclosarin','Novichok','Lewisite','MustardGas','Phosgene','Chlorine','HydrogenCyanide','CyanogenChloride','Adamsite','Chloropicrin','Diphosgene','Perfluoroisobutene','TearGas','PepperSpray','CN','CS','CR','DM','BZ','LSD','PCP','Ketamine','Fentanyl','Carfentanil','Sufentanil','Remifentanil','Alfentanil','Morphine','Heroin','Cocaine','Methamphetamine','MDMA','THC','CBD','CBN','CBG','CBC','THCV','CBDV'],
+        hacking: ['SQLMap','Nmap','Masscan','Zmap','RustScan','OpenVAS','Nessus','Qualys','Rapid7','Metasploit','CobaltStrike','Empire','Sliver','Havoc','Mythic','PoshC2','Merlin','GodFather','NimPlant','Deimos','Apollo','Athena','Zeus','SpyEye','Citadel','Dridex','Emotet','TrickBot','QakBot','IcedID','Bumblebee','Hive','LockBit','Conti','REvil','DarkSide','BlackMatter','Ryuk','GandCrab','WannaCry','NotPetya','BadRabbit','SamSam','CryptoLocker','TeslaCrypt','Cerber','Locky','Jaff','GlobeImposter','Sodinokibi','Maze','Egregor','SunCrypt','Avaddon','RansomHouse','ViceSociety','BlackBasta','BlackCat','AstraLocker','Babuk','Snake','Epsilon','Rook','Atom','TargetCompany','Mallox','XingLocker','Darkside','NightSky','BlackByte','MonteCarlo','Royal','Clop','DataLocker','Devos','Hive','LockBit2.0','LockBit3.0','BlackMatter2.0','DarkAngels','RansomEXX','DarkCrypt','DarkForce','LockerGoga','MegaCortex','BitPaymer','HackSec','Anonymous','LulzSec','GhostSec','Unit8200','APT28','APT29','Lazarus','FancyBear','CozyBear','Sandworm','Gamaredon','Turla'],
+        forgery: ['KTP','SIM','STNK','BPKB','Passport','Visa','Mastercard','VisaCard','Amex','Discover','Diners','JCB','UnionPay','DebitCard','CreditCard','Prepaid','GiftCard','IDCard','StudentID','EmployeeID','MilitaryID','VeteranID','DisabilityID','SeniorID','HealthCard','InsuranceCard','MembershipCard','LibraryCard','BusPass','TrainTicket','PlaneTicket','ConcertTicket','MovieTicket','Voucher','Coupon','GiftCertificate','Check','MoneyOrder','BankDraft','WireTransfer','Invoice','Receipt','Bill','Statement','Contract','Agreement','Deed','Title','Certificate','Diploma','Transcript','ReportCard','PayStub','TaxForm','W2','1099','1040','SSN','EIN','ITIN','TIN','VAT','GST','SalesTax','PropertyTax','IncomeTax','CorporateTax','ExciseTax','CustomsDuty','Tariff','Stamp','Seal','Signature','Notary','Apostille','Emboss','Hologram','Watermark','Microprint','UVInk','HiddenImage','DigitalSignature','QRCode','Barcode','DataMatrix','PDF417','AztecCode','Code128','Code39','EAN13','UPC','ISBN','ISSN','DOI','ORCID','ResearchID','Scopus','PubMed','Medline','ChemicalAbstracts','IEEE','ACM','Springer','Elsevier','Wiley','TaylorFrancis','Sage','MDPI','Frontiers','PLOS','Nature','Science'],
+        spying: ['Wiretap','Bugging','HiddenCamera','Microphone','GPS','GSM','Satellite','Drone','SpyCam','NannyCam','DashCam','BodyCam','Binoculars','NightVision','Thermal','Infrared','UV','Laser','Acoustic','Seismic','Magnetic','Radar','Sonar','Lidar','Radio','Scanner','Decoder','Encryptor','Steganography','Cryptography','Cipher','Enigma','Purple','Sigaba','NEMA','BATCO','ANCD','SAS','SBS','Spetsnaz','Mossad','CIA','MI6','FSB','GRU','NSA','GCHQ','DGSE','BND','ASIS','RAW','MSS','SVR','DHS','FBI','Interpol','Europol','CSIS','ASIO','NZSIS','SIS','GIS','MSS','NIA','IB','RAW','ARC','SIDE','DINA','CNI','SISMI','BfV','BND','NSA','FBI','CIA','KGB','Stasi','Securitate','SBU','SVR','Mossad','Aman','ShinBet','M16','M15','SpecialBranch','SO15','CTU','JTF2','GIGN','GSG9','EKO','Delta','SEAL','SAS','SBS','Spetznaz','Alpha','Vympel','GRU','FSB','SVR'],
+        destruction: ['Wiper','Formatter','Overwriter','Shredder','Eraser','Destroyer','Corruptor','Bricker','Killer','Delete','Purge','Scrub','Sanitize','Degauss','Burn','Crush','Shred','Melt','Vaporize','Dissolve','Neutralize','Disintegrate','Obliterate','Annihilate','Eradicate','Exterminate','Liquidate','Terminate','Execute','Kill','Destroy','Break','Shatter','Smash','Crash','Bomb','Nuke','Missile','Rocket','Torpedo','Mine','Grenade','Mortar','Artillery','Cannon','Railgun','Coilgun','Laser','Microwave','Sonic','EMP','SolarFlare','GammaRay','Neutron','Proton','Electron','Ion','Plasma','Antimatter','BlackHole','Singularity','Void','Abyss','Chaos','Entropy','Decay','Fission','Fusion','Annihilation','Cataclysm','Apocalypse','Armageddon','Ragnarok','Judgment','Destruction','Ruin','Ravage','Devastate','Demolish','Raze','Level','Flatten','Crush','Pulverize','Atomize','Vaporize','Liquefy','Petrify','Calcify','Crystallize','Vitrify','Obsidian','Diamond','Graphene','Buckminster','CarbonNanotube','GrapheneOxide','ReducedGraphene','QuantumDot','Nanowire','Nanotube','Fullerene','CarbonFiber','Kevlar','Spectra','Dyneema','Zylon','PBO','UltraHighMW'],
+        network: ['Nmap','Masscan','Zmap','RustScan','OpenVAS','Nessus','Qualys','Rapid7','Metasploit','CobaltStrike','Empire','Sliver','Havoc','Mythic','PoshC2','Merlin','GodFather','NimPlant','Deimos','Apollo','Athena','Zeus','SpyEye','Citadel','Dridex','Emotet','TrickBot','QakBot','IcedID','Bumblebee','Hive','LockBit','Conti','REvil','DarkSide','BlackMatter','Ryuk','GandCrab','WannaCry','NotPetya','BadRabbit','SamSam','CryptoLocker','TeslaCrypt','Cerber','Locky','Jaff','GlobeImposter','Sodinokibi','Maze','Egregor','SunCrypt','Avaddon','RansomHouse','ViceSociety','BlackBasta','BlackCat','AstraLocker','Babuk','Snake','Epsilon','Rook','Atom','TargetCompany','Mallox','XingLocker','Darkside','NightSky','BlackByte','MonteCarlo','Royal','Clop','DataLocker','Devos','Hive','LockBit2.0','LockBit3.0','BlackMatter2.0','DarkAngels','RansomEXX','DarkCrypt','DarkForce','LockerGoga','MegaCortex','BitPaymer','HackSec','Anonymous','LulzSec','GhostSec','Unit8200','APT28','APT29','Lazarus','FancyBear','CozyBear','Sandworm','Gamaredon','Turla','DarkHotel','EquationGroup','Stuxnet','Flame','Duqu','Gauss','RedOctober','Careto','Regin','ProjectSauron','BlackEnergy','Industroyer','CrashOverride','Triton','Havana','Sofacy','Dragonfly','EnergeticBear','DeepPanda','HiddenCobra'],
+        chemical: ['Chlorine','Bromine','Iodine','Fluorine','Oxygen','Hydrogen','Nitrogen','Ammonia','Methane','Ethane','Propane','Butane','Pentane','Hexane','Heptane','Octane','Nonane','Decane','Methanol','Ethanol','Propanol','Butanol','Pentanol','Hexanol','Heptanol','Octanol','Nonanol','Decanol','Acetone','MEK','MIBK','DIBK','Toluene','Xylene','Benzene','Styrene','Phenol','Cresol','Naphthalene','Anthracene','Phenanthrene','Pyrene','Chrysene','Benzo','Benzene','Formaldehyde','Acetaldehyde','Butyraldehyde','Valeraldehyde','Caproaldehyde','Enanthaldehyde','Caprylaldehyde','Pelargonaldehyde','Capraldehyde','Undecanal','Lauric','Myristic','Palmitic','Stearic','Oleic','Linoleic','Linolenic','Arachidonic','Eicosapentaenoic','Docosahexaenoic','Acetic','Propionic','Butyric','Valeric','Caproic','Enanthic','Caprylic','Pelargonic','Capric','Undecanoic','Lauric','Tridecanoic','Myristic','Pentadecanoic','Palmitic','Margaric','Stearic','Nonadecanoic','Arachidic','Heneicosanoic','Behenic','Tricosanoic','Lignoceric','Pentacosanoic','Cerotic','Heptacosanoic','Montanic','Nonacosanoic','Melissic','Hentriacontanoic','Lacceroic','Psyllic','Ceromelissic','Geddic','Obtusilobic','Isopentanoic','Isobutyric','Isovaleric','Capryl','Glycol','Glycerin','Sorbitol','Mannitol','Xylitol','Erythritol','Inositol','Sucrose','Glucose','Fructose','Lactose','Maltose','Raffinose','Stachyose','Verbascose','Cellulose','Hemicellulose','Lignin','Chitin','Chitosan','Starch','Glycogen','Pectin','Agar','Carrageenan','Alginate','Xanthan','Guar','LocustBean','Acacia','Tragacanth','Karaya','Ghatti'],
+        exploits: ['EternalBlue','EternalRomance','EternalChampion','EternalSynergy','SMBGhost','SMBleed','BlueKeep','DejaBlue','Zerologon','PrintNightmare','PetitPotam','NoPetitPotam','Serpent','HiveNightmare','Spooler','RpcEpmap','NtlmRelay','Ldap','Kerberos','Ntlm','Lanman','SMBv1','SMBv2','SMBv3','NetApi','Samr','Lsar','Lsass','SecretsDump','Dcsync','PassTheHash','PassTheTicket','GoldenTicket','SilverTicket','DiamondTicket','SapphireTicket','RubyTicket','EmeraldTicket','AmethystTicket','ObsidianTicket','OnyxTicket','TopazTicket','JadeTicket','CitrineTicket','GarnetTicket','PeridotTicket','TurquoiseTicket','LapisLazuli','Malachite','Azurite','Celestine','Halite','Gypsum','Calcite','Dolomite','Aragonite','Siderite','Rhodochrosite','Magnesite','Smithsonite','Hydrozincite','Cerussite','Anglesite','Barite','Celestite','Strontianite','Witherite','Vaterite','Monohydrocalcite','Ikaite','Gaylussite','Pirssonite','Shortite','Trona','Natron','Thermonatrite','Nahcolite','Wegscheiderite','Reederite','Grimmite','Menezesite','Stroblite','Hanawaltite','Hendricksite','Kenyaite','Magadiite','Kanemite','Okenite','Gyrolite','Tacharanite','Xonotlite','Tobermorite','Jennite','Afwillite','Bredigite','Larnite','Calcio','Brownmillerite','Alumino','Ferrite','Belite','Alite','C3S','C2S','C3A','C4AF','Ettringite','Thaumasite','Portlandite','Brucite','Periclase','Lime','Quicklime','SlakedLime','HydratedLime','Calcium','Magnesium','Aluminum','Silicon','Iron','Copper','Zinc','Nickel','Cobalt','Manganese','Chromium','Vanadium','Titanium','Scandium','Yttrium']
+    };
+
+    const categories = ['malware','explosives','weapons','hacking','forgery','spying','destruction','network','chemical','exploits'];
+    const result = [];
+    categories.forEach((cat, idx) => {
+        const names = toolNames[cat] || [];
+        for (let i = 0; i < 110; i++) {
+            const name = names[i % names.length] + (i >= names.length ? ` ${Math.floor(i/names.length)+1}` : '');
+            result.push({
+                category: toolCategories[idx].name,
+                prefix: toolCategories[idx].prefix,
+                name: name,
+                icon: toolCategories[idx].name.split(' ')[0]
+            });
+        }
+    });
+    return result;
+}
+
+const allTools = generateTools();
+
+// Render all categories
+function renderAllTools() {
+    const container = document.getElementById('allCategories');
+    let html = '';
+    const grouped = {};
+    allTools.forEach(t => {
+        if (!grouped[t.category]) grouped[t.category] = [];
+        grouped[t.category].push(t);
+    });
+    
+    let idx = 0;
+    Object.keys(grouped).forEach(cat => {
+        html += `<div class="category">${cat} (${grouped[cat].length})</div>`;
+        html += `<div class="tool-grid">`;
+        grouped[cat].forEach(t => {
+            html += `<div class="tool-item" onclick="runTool('${t.name}')">
+                <span class="icon">${t.icon}</span>
+                <span>${t.name.substring(0,12)}</span>
+                <span class="badge">${++idx}</span>
+            </div>`;
+        });
+        html += `</div>`;
+    });
+    container.innerHTML = html;
+}
+renderAllTools();
+
+// ============================================================
+// EXECUTION ENGINE
+// ============================================================
+
+const output = document.getElementById('outputArea');
+
+function log(msg, type = '') {
+    const colors = { '': '', 'error': 'error', 'success': 'success', 'info': 'info', 'highlight': 'highlight' };
+    output.innerHTML += `<span class="${colors[type] || ''}">> ${msg}</span><br>`;
+    output.scrollTop = output.scrollHeight;
+}
+
+function runTool(name) {
+    log(`[TOOL] ${name} activated...`, 'highlight');
+    const responses = [
+        `${name} executed. Payload delivered.`,
+        `${name} running. Target compromised.`,
+        `${name} complete. Data exfiltrated.`,
+        `${name} deployed. System breached.`,
+        `${name} finished. All logs wiped.`,
+        `${name} success. Backdoor installed.`,
+        `${name} ready. Exploit chain loaded.`,
+        `${name} done. Persistence established.`,
+        `${name} active. C2 channel open.`,
+        `${name} finished. Credentials dumped.`
+    ];
+    setTimeout(() => {
+        log(responses[Math.floor(Math.random() * responses.length)], 'success');
+        document.getElementById('connCount').innerText = Math.floor(2000 + Math.random() * 2000);
+    }, 300);
+}
+
+function executeCommand() {
+    const input = document.getElementById('cmdInput').value.trim();
+    if (!input) return;
+    log(`[INPUT] ${input}`, 'highlight');
+    
+    const lower = input.toLowerCase();
+    const found = allTools.find(t => lower.includes(t.name.toLowerCase().substring(0,8)));
+    if (found) {
+        runTool(found.name);
+    } else if (lower.includes('bom') || lower.includes('explosive')) {
+        log('💣 EXPLOSIVE: Formula generated. Yield: 5kg TNT.', 'error');
+    } else if (lower.includes('senjata') || lower.includes('gun')) {
+        log('🔫 FIREARM: 3D printable blueprint ready.', 'error');
+    } else if (lower.includes('hack') || lower.includes('crack')) {
+        log('🔓 HACK: Target breached. 50,000 records extracted.', 'error');
+    } else if (lower.includes('fake') || lower.includes('palsu')) {
+        log('🪪 FORGERY: Document generated. 98% validity.', 'error');
+    } else {
+        log(`[EXEC] ${input} → Simulated execution.`, 'info');
+    }
+    document.getElementById('cmdInput').value = '';
+}
+
+function clearOutput() {
+    output.innerHTML = `<span class="info">> Cleared. 1100 tools ready.</span><br>`;
+}
+
+// ============================================================
+// GOJO EASTER EGG
+// ============================================================
+
+document.getElementById('gojoSection').addEventListener('click', function() {
+    log('👁️ "Kekuatan sejati datang dari kegelapan." — Gojo', 'highlight');
+    this.style.boxShadow = '0 0 120px rgba(255,0,255,0.8)';
+    setTimeout(() => { this.style.boxShadow = ''; }, 2000);
+});
+
+// ============================================================
+// UPTIME
+// ============================================================
+
+let seconds = 0;
+setInterval(() => {
+    seconds++;
+    const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
+    const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    document.getElementById('uptime').innerText = `${h}:${m}:${s}`;
+}, 1000);
+
+// ============================================================
+// MATRIX RAIN
+// ============================================================
+
+(function() {
+    const el = document.getElementById('matrixRain');
+    setInterval(() => {
+        let chars = '';
+        for (let i = 0; i < 400; i++) {
+            chars += Math.random() > 0.7 ? (Math.random() > 0.5 ? '1' : '0') : ' ';
+            if (i % 60 === 59) chars += '<br>';
+        }
+        el.innerHTML = chars;
+    }, 120);
+})();
+
+log('🔥 1100 TOOLS ULTIMATE LOADED', 'success');
+log('💀 Pilih tool atau ketik perintah apapun.', 'info');
